@@ -1,51 +1,64 @@
-package com.restjpa.db;
+package com.restjpa.db.entity;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 
 /**
  * The persistent class for the tb_master_status database table.
  * 
  */
 @Entity
-@Table(name = "tb_master_status")
-@NamedQuery(name = "TbMasterStatus.findAll", query = "SELECT t FROM TbMasterStatus t")
+@Table(name="tb_master_status")
+@NamedQuery(name="TbMasterStatus.findAll", query="SELECT t FROM TbMasterStatus t")
 public class TbMasterStatus implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "tbms_id")
+	@Column(name="tbms_id")
 	private Integer tbmsId;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "tbms_create_date")
+	@Column(name="tbms_create_date")
 	private Date tbmsCreateDate;
 
-	@Column(name = "tbms_create_id")
+	@Column(name="tbms_create_id")
 	private Integer tbmsCreateId;
 
-	@Column(name = "tbms_id_parent")
+	@Column(name="tbms_id_parent")
 	private Integer tbmsIdParent;
 
-	@Column(name = "tbms_name")
+	@Column(name="tbms_name")
 	private String tbmsName;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "tbms_update_date")
+	@Column(name="tbms_update_date")
 	private Date tbmsUpdateDate;
 
-	@Column(name = "tbms_update_id")
+	@Column(name="tbms_update_id")
 	private Integer tbmsUpdateId;
 
-	// bi-directional many-to-one association to TbMasterMember
-	@OneToMany(mappedBy = "tbMasterStatus1")
+	//bi-directional many-to-one association to TbMasterMember
+	@OneToMany(mappedBy="tbMasterStatus1")
 	private List<TbMasterMember> tbMasterMembers1;
 
-	// bi-directional many-to-one association to TbMasterMember
-	@OneToMany(mappedBy = "tbMasterStatus2")
+	//bi-directional many-to-one association to TbMasterMember
+	@OneToMany(mappedBy="tbMasterStatus2")
 	private List<TbMasterMember> tbMasterMembers2;
+
+	//bi-directional many-to-one association to TbMasterMemberAddress
+	@OneToMany(mappedBy="tbMasterStatus")
+	private List<TbMasterMemberAddress> tbMasterMemberAddresses;
 
 	public TbMasterStatus() {
 	}
@@ -148,6 +161,28 @@ public class TbMasterStatus implements Serializable {
 		tbMasterMembers2.setTbMasterStatus2(null);
 
 		return tbMasterMembers2;
+	}
+
+	public List<TbMasterMemberAddress> getTbMasterMemberAddresses() {
+		return this.tbMasterMemberAddresses;
+	}
+
+	public void setTbMasterMemberAddresses(List<TbMasterMemberAddress> tbMasterMemberAddresses) {
+		this.tbMasterMemberAddresses = tbMasterMemberAddresses;
+	}
+
+	public TbMasterMemberAddress addTbMasterMemberAddress(TbMasterMemberAddress tbMasterMemberAddress) {
+		getTbMasterMemberAddresses().add(tbMasterMemberAddress);
+		tbMasterMemberAddress.setTbMasterStatus(this);
+
+		return tbMasterMemberAddress;
+	}
+
+	public TbMasterMemberAddress removeTbMasterMemberAddress(TbMasterMemberAddress tbMasterMemberAddress) {
+		getTbMasterMemberAddresses().remove(tbMasterMemberAddress);
+		tbMasterMemberAddress.setTbMasterStatus(null);
+
+		return tbMasterMemberAddress;
 	}
 
 }
